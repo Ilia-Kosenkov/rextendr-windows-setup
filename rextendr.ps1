@@ -44,7 +44,7 @@ $has_rtools = `
 
 
 if (-not $has_rtools) {
-    echo "Installing R using `choco` "
+    echo "Installing Rtools using `choco` "
     choco install rtools -y
 } else {
     echo "Found RTools"
@@ -62,19 +62,19 @@ if ($env:RTOOLS40_HOME -eq $null) {
     echo "Found RTOOLS40_HOME with value $env:RTOOLS40_HOME"
 }
 
-# choco install visualstudio2019buildtools -y
-# choco install visualstudio2019-workload-vctools -y -f --package-parameters "--no-includeRecommended --add Microsoft.VisualStudio.Component.VC.CoreBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.18362"
+choco install visualstudio2019buildtools -y
+choco install visualstudio2019-workload-vctools -y -f --package-parameters "--no-includeRecommended --add Microsoft.VisualStudio.Component.VC.CoreBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.18362"
 
 $has_rust = try {rustup --version} catch { $null }
 
-if (-not $has_rust) {
+if ($has_rust -eq $null) {
     echo "Downloading rustup-init"
     Invoke-WebRequest https://win.rustup.rs/x86_64 -OutFile "~\Downloads\rustup-init.exe"
     echo "Setting up rust toolchain and targets"
     ~\Downloads\rustup-init.exe -y --no-update-default-toolchain --default-toolchain stable-x86_64-pc-windows-msvc --target x86_64-pc-windows-gnu i686-pc-windows-gnu
 
     # Adding cargo to path in the current session
-    $env:PATH += ";~\.cargo\bin"
+    $env:PATH += ";$env:USERPROFILE\.cargo\bin"
 } else {
     echo "Found rustup"
     echo "Setting up/updating rust toolchain and targets"
