@@ -55,7 +55,7 @@ if ($env:RTOOLS40_HOME -eq $null) {
     
     $rtools_home = "C:\rtools40"
     Invoke-Expression "setx RTOOLS40_HOME `"$rtools_home`""
-    $env:RTOOLS40_HOME1 = $rtools_home
+    $env:RTOOLS40_HOME = $rtools_home
 
     echo "Set up RTOOLS40_HOME to $rtools_home"
 } else {
