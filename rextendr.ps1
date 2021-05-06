@@ -68,8 +68,12 @@ choco install visualstudio2019-workload-vctools -y -f --package-parameters "--no
 $has_rust = try {rustup --version} catch { $null }
 
 if ($has_rust -eq $null) {
-    echo "Downloading rustup-init"
-    Invoke-WebRequest https://win.rustup.rs/x86_64 -OutFile "~\Downloads\rustup-init.exe"
+    if ((ls "~\Downloads\rustup-init.exe" -ErrorAction SilentlyContinue | Measure).Count -ne 0) {
+        echo "Found a 'rustup-init.exe' in the '~\Downloads', running it"
+    } else {
+        echo "Downloading rustup-init"
+        Invoke-WebRequest https://win.rustup.rs/x86_64 -OutFile "~\Downloads\rustup-init.exe"
+    }
     echo "Setting up rust toolchain and targets"
     ~\Downloads\rustup-init.exe -y --no-update-default-toolchain --default-toolchain stable-x86_64-pc-windows-msvc --target x86_64-pc-windows-gnu i686-pc-windows-gnu
 
@@ -83,11 +87,25 @@ if ($has_rust -eq $null) {
     rustup target add i686-pc-windows-gnu --toolchain stable-x86_64-pc-windows-msvc
 }
 
-echo "Adding R bin to PATH for this sesion only"
-$env:PATH += ";$env:R_HOME\bin;$env:R_HOME\bin\x64;$env:R_HOME\bin\i386"
+
+function add_path {
+    param (
+        $path
+    )
+    $split_path = $env:PATH.Split(";")
+    if (($split_path | ? {$_ -like $path} | measure).Count -eq 0) {
+        echo "Adding $path to PATH for this session only"
+        $env:PATH += ";$path"
+    }
+}
+
+add_path("$env:R_HOME\bin")
+add_path("$env:R_HOME\bin\x64")
+add_path("$env:R_HOME\bin\i386")
 
 
-echo "Adding Rtools bin to PATH for this sesion only"
-$env:PATH += ";$env:RTOOLS40\usr\bin;$env:RTOOLS40_HOME\mingw64\bin;$env:RTOOLS40_HOME\mingw32\bin"
+add_path("$env:RTOOLS40_HOME\usr\bin")
+add_path("$env:RTOOLS40_HOME\mingw64\bin")
+add_path("$env:RTOOLS40_HOME\mingw32\bin")
 
 echo "You are all set up!"
