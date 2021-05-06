@@ -1,4 +1,7 @@
-install.packages(c("curl", "remotes"))
+dir_name <- paste0(R.version$major, ".", strsplit(R.version$minor, "\\.")[[1]][1])
+.libPaths(c(normalizePath(file.path("~", "R", "win-library", dir_name), mustWork = FALSE), .libPaths()))
+
+install.packages(c("curl", "remotes"), repos = "https://cloud.r-project.org/")
 remotes::install_cran(c("rlang", "vctrs", "desc"))
 tempdir <- tempfile()
 dir.create(tempdir, recursive = TRUE)
