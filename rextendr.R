@@ -16,4 +16,4 @@ remotes::install_github("extendr/rextendr")
 
 cat("Everything is set up!\n")
 cat("Try out {rextendr} by copy-pasting this code fragment into your pwsh:\n\n")
-cat('\tRscript.exe -e "rextendr::rust_function(\\`"fn hello_world() -> String {\\\\\\\`"Hello world!\\\\\\\`".into()} \\`") ; hello_world()"\n')
+cat('\tRscript.exe -e "rextendr::rust_function(\'fn rust_add(a:i32,b:i32) -> i32 { a + b }\'); rust_add(10, 42)"\n')
