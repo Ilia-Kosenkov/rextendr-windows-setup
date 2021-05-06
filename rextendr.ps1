@@ -39,7 +39,7 @@ if ($env:R_HOME -eq $null) {
 
 $has_rtools = ` 
     $($env:RTOOLS40_HOME -ne $null) -or ` 
-    $(-not $(choco list -lo -e R)[1].StartsWith("0")) -or ` 
+    $(-not $(choco list -lo -e rtools)[1].StartsWith("0")) -or ` 
     $((ls 'C:\rtools40' -ErrorAction SilentlyContinue  | Measure).Count -ne 0)
 
 
